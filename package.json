@@ -1,0 +1,16 @@
+{
+  "name": "openloopkiller",
+  "version": "1.0.0",
+  "description": "inject open loop protection for any loop detected ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "escodegen": "^2.0.0",
+    "esprima": "^4.0.1",
+    "vm2": "^3.9.2"
+  }
+}
