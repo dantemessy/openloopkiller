@@ -2,12 +2,17 @@
   "name": "open-loop-killer",
   "version": "1.0.0",
   "description": "inject open loop protection for any loop detected ",
+  "keywords": ["open loop", "injection" , "infinite loop"],
+  "repository": "github:dantemessy/openloopkiller",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "DanTe",
+    "url": "https://github.com/dantemessy"
+  },
+  "license": "MIT",
   "dependencies": {
     "escodegen": "^2.0.0",
     "esprima": "^4.0.1",
