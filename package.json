@@ -1,8 +1,12 @@
 {
   "name": "open-loop-killer",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "inject open loop protection for any loop detected ",
-  "keywords": ["open loop", "injection" , "infinite loop"],
+  "keywords": [
+    "open loop",
+    "injection",
+    "infinite loop"
+  ],
   "repository": "github:dantemessy/openloopkiller",
   "main": "index.js",
   "scripts": {
@@ -17,5 +21,9 @@
     "escodegen": "^2.0.0",
     "esprima": "^4.0.1",
     "vm2": "^3.9.2"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/dantemessy/openloopkiller/issues"
+  },
+  "homepage": "https://github.com/dantemessy/openloopkiller#readme"
 }
