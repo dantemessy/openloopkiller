@@ -1,6 +1,6 @@
 # Open Loop Killer
 
-> ${Prevent your code from open loops by injecting protection code for any loop detected}
+> Prevent your code from open loops by injecting protection code for any loop detected
 
 [![NPM Version][npm-image]][npm-url]
 [![Linux Build][travis-image]][travis-url]
@@ -8,11 +8,22 @@
 
 ## Install
 
-```bash
+```
 npm i open-loop-killer
 ```
 
 ## Usage
+
+- Runs Untrusted code securely with no open loops issue.
+- Add one more layer of safety for your code.
+
+
+## How does it work
+
+- Compile the code to make sure it valid.
+- Convert it to AST.
+- Find any loop to inject the protection code to it.
+- Convert AST to String.
 
 
 ## Example 
@@ -26,6 +37,20 @@ let code = `
 let injectedCode = injector(code));
 
 ```
+
+Injected Code Be Like: 
+```
+let _9ui = Date.now();
+while (true) {
+    if (Date.now() - _9ui > 1000) {
+        throw new Error('Open Loop Detected!');
+    }
+    {
+    }
+}
+
+```
+
 
 
 ## License
