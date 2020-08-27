@@ -2,7 +2,7 @@
 
 > Prevent your code from open loops by injecting protection code for any loop detected
 
-[![NPM Version][npm-image]][npm-url]
+<!-- [![NPM Version][npm-image]][npm-url] -->
 <!-- [![Linux Build][travis-image]][travis-url]
 [![Test Coverage][coveralls-image]][coveralls-url] -->
 
@@ -55,7 +55,7 @@ while (true) {
 
 ## License
 
-[MIT](http://vjpr.mit-license.org)
+[MIT](./LICENSE)
 
 [npm-image]: https://img.shields.io/npm/v/live-xxx.svg
 [npm-url]: https://www.npmjs.com/package/open-loop-killer
