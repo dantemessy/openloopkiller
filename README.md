@@ -1,6 +1,6 @@
-# live-xxx
+# Open Loop Killer
 
-> ${DESCRIPTION}
+> ${Prevent your code from open loops by injecting protection code for any loop detected}
 
 [![NPM Version][npm-image]][npm-url]
 [![Linux Build][travis-image]][travis-url]
@@ -9,12 +9,24 @@
 ## Install
 
 ```bash
-npm i -S live-xxx
+npm i open-loop-killer
 ```
 
 ## Usage
 
-TODO
+
+## Example 
+```
+const {injector} = require('open-loop-killer');
+
+let code = `
+    while(true){
+    }
+`
+let injectedCode = injector(code));
+
+```
+
 
 ## License
 
