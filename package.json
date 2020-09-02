@@ -1,6 +1,6 @@
 {
   "name": "open-loop-killer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "inject open loop protection for any loop detected ",
   "keywords": [
     "open loop",

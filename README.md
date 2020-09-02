@@ -2,9 +2,8 @@
 
 > Prevent your code from open loops by injecting protection code for any loop detected
 
-<!-- [![NPM Version][npm-image]][npm-url] -->
-<!-- [![Linux Build][travis-image]][travis-url]
-[![Test Coverage][coveralls-image]][coveralls-url] -->
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
 
 ## Install
 
@@ -57,9 +56,9 @@ while (true) {
 
 [MIT](./LICENSE)
 
-[npm-image]: https://img.shields.io/npm/v/live-xxx.svg
+[npm-image]: https://img.shields.io/npm/v/open-loop-killer.svg
 [npm-url]: https://www.npmjs.com/package/open-loop-killer
-[travis-image]: https://img.shields.io/travis/live-js/live-xxx/master.svg
-[travis-url]: https://travis-ci.org/live-js/live-xxx
-[coveralls-image]: https://img.shields.io/coveralls/live-js/live-xxx/master.svg
-[coveralls-url]: https://coveralls.io/r/live-js/live-xxx?branch=master
+
+[downloads-image]: https://img.shields.io/npm/dm/open-loop-killer.svg?style=flat-square
+[downloads-url]: https://www.npmjs.com/package/open-loop-killer
+
