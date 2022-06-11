@@ -20,7 +20,7 @@
   "dependencies": {
     "escodegen": "^2.0.0",
     "esprima": "^4.0.1",
-    "vm2": "^3.9.2"
+    "vm2": "^3.9.9"
   },
   "bugs": {
     "url": "https://github.com/dantemessy/openloopkiller/issues"
