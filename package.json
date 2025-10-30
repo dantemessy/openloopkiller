@@ -1,11 +1,22 @@
 {
   "name": "open-loop-killer",
-  "version": "1.0.4",
-  "description": "inject open loop protection for any loop detected ",
+  "version": "1.1.0",
+  "description": "Inject timeout protection into JavaScript loops to prevent infinite loops. Supports while, for, do-while, for-in, and for-of loops with customizable timeout and error messages.",
   "keywords": [
-    "open loop",
-    "injection",
-    "infinite loop"
+    "infinite-loop",
+    "loop-protection",
+    "timeout",
+    "code-safety",
+    "sandbox",
+    "security",
+    "ast",
+    "code-injection",
+    "untrusted-code",
+    "loop-killer",
+    "for-in",
+    "for-of",
+    "while-loop",
+    "for-loop"
   ],
   "repository": "github:dantemessy/openloopkiller",
   "main": "index.js",
@@ -18,12 +29,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "escodegen": "^2.0.0",
+    "escodegen": "^2.1.0",
     "esprima": "^4.0.1"
   },
   "devDependencies": {
     "mocha": "^10.0.0",
-    "chai": "^4.3.0"
+    "chai": "^4.5.0"
   },
   "bugs": {
     "url": "https://github.com/dantemessy/openloopkiller/issues"
