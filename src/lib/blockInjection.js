@@ -5,24 +5,27 @@ const insertionCode = require('./insertionBlock');
 
 
 
-const injectionProcess = (ast) => {
+const injectionProcess = (ast, options = {}) => {
     
   // If this isn't actual body, recurse with the body
   if (!Array.isArray(ast)) {
-    injectionProcess(ast.body);
+    injectionProcess(ast.body, options);
     return;
   }
   // Traverse the body
   for (let i = ast.length; i--;) {
 
     const currentElement = ast[i];
-    const loopDetected = (currentElement && currentElement.type === 'ForStatement') ||
-    currentElement.type === 'WhileStatement' ||
-    currentElement.type === 'DoWhileStatement'; 
+    const loopDetected = (currentElement && 
+      currentElement.type === 'ForStatement') ||
+      currentElement.type === 'WhileStatement' ||
+      currentElement.type === 'DoWhileStatement' ||
+      currentElement.type === 'ForInStatement' ||
+      currentElement.type === 'ForOfStatement'; 
 
     
     if (loopDetected){
-      const insertionBlocks = insertionCode();
+      const insertionBlocks = insertionCode(options);
       const randomVariableName = randomIdGenerator();
       //@ts-ignore
       insertionBlocks.before.declarations[0].id.name = insertionBlocks.inside.test.left.right.name = randomVariableName;
@@ -45,7 +48,7 @@ const injectionProcess = (ast) => {
 
     // Recurse on inner body
     if (currentElement.body) {
-      injectionProcess(currentElement.body);
+      injectionProcess(currentElement.body, options);
     }
   }
 };
