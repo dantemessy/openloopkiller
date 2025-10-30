@@ -1,9 +1,17 @@
-# Open Loop Killer
+<div align="center">
+  <img src="logo.jpg" alt="Open Loop Killer Logo" width="280"/>
+  
+  # Open Loop Killer
+  
+  **Protect your JavaScript code from infinite loops**
+  
+  [![NPM Version][npm-image]][npm-url]
+  [![NPM Downloads][downloads-image]][downloads-url]
+  
+  *Inject timeout protection into all loop types • Customizable • Production-ready*
+</div>
 
-> Prevent your code from open loops by injecting protection code for any loop detected
-
-[![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
+---
 
 ## Install
 
