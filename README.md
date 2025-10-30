@@ -100,32 +100,6 @@ let injectedCode = injector(code, {
 });
 ```
 
-### With For-In Loop
-
-```javascript
-const {injector} = require('open-loop-killer');
-
-let code = `
-    for(let key in largeObject) {
-        // Process each property
-    }
-`
-let injectedCode = injector(code, { timeout: 3000 });
-```
-
-### With For-Of Loop
-
-```javascript
-const {injector} = require('open-loop-killer');
-
-let code = `
-    for(let item of infiniteGenerator()) {
-        // Process each item
-    }
-`
-let injectedCode = injector(code);
-```
-
 ### Injected Code Example
 
 Input:
@@ -158,8 +132,8 @@ while (true) {
 
 ⚠️ **Important**: This package has the following limitations:
 
-1. **No protection for:**
-   - ❌ `for await...of` loops (async iteration - not yet supported)
+1. **No protection (not yet supported) for:**
+   - ❌ `for await...of` loops (async iteration)
    - ❌ Recursive functions
    - ❌ Async loops or promises without await
    - ❌ Array methods like `.forEach()`, `.map()`, etc.
@@ -173,22 +147,6 @@ while (true) {
 3. **Error handling:**
    - When a loop times out, it throws an error
    - Make sure to wrap execution in try-catch if needed
-
-## Use Cases
-
-✅ **Good for:**
-- Online code editors
-- Educational platforms
-- Code sandboxes
-- Running untrusted user code
-- Development environments
-
-⚠️ **Consider alternatives for:**
-- Production applications requiring async iteration protection (`for await...of`)
-- Code with complex async patterns
-- Applications needing recursive function protection
-- High-performance applications (adds overhead to each loop iteration)
-
 
 
 ## License
