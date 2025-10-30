@@ -33,7 +33,7 @@ let code = `
     while(true){
     }
 `
-let injectedCode = injector(code));
+let injectedCode = injector(code);
 
 ```
 

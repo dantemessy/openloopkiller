@@ -3,7 +3,6 @@
 const parseScript = require('esprima').parseScript;
 const generate = require('escodegen').generate;
 const injectionProcess = require('./blockInjection.js');
-const { VMScript } = require('vm2');
 
 
 
@@ -11,14 +10,8 @@ const { VMScript } = require('vm2');
 module.exports = (code) => {
 
     let data;
-    let vm = new VMScript(code);
 
-    try {
-        vm.compile();
-    } catch (err) {
-        throw new Error('Failed to compile script due to: ' + err);
-    }
-
+    // Parse and validate the script using esprima
     try {
         data = parseScript(code);
     } catch (err) {
