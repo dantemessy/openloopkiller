@@ -15,18 +15,42 @@ npm i open-loop-killer
 
 - Runs Untrusted code securely with no open loops issue.
 - Add one more layer of safety for your code.
-
+- Protects `while`, `for`, `do-while`, `for...in`, and `for...of` loops from running indefinitely.
 
 ## How does it work
 
-- Compile the code to make sure it valid.
-- Convert it to AST.
-- Find any loop to inject the protection code to it.
-- Convert AST to String.
+1. Parses the code to make sure it's valid JavaScript.
+2. Converts it to AST (Abstract Syntax Tree).
+3. Detects all loops and injects protection code.
+4. Converts AST back to executable JavaScript string.
 
+## API
 
-## Example 
-```
+### `injector(code, options)`
+
+Injects loop protection code into JavaScript source code.
+
+#### Parameters
+
+- **`code`** (string, required) - The JavaScript code to protect
+- **`options`** (object, optional) - Configuration options
+  - **`timeout`** (number, optional) - Timeout in milliseconds before throwing error. Default: `1000`
+  - **`errorMessage`** (string, optional) - Custom error message. Default: `'Open Loop Detected!'`
+
+#### Returns
+
+- (string) - The protected JavaScript code with injected loop protection
+
+#### Throws
+
+- Error if code is invalid JavaScript
+- Error if options are invalid
+
+## Examples
+
+### Basic Usage
+
+```javascript
 const {injector} = require('open-loop-killer');
 
 let code = `
@@ -34,21 +58,136 @@ let code = `
     }
 `
 let injectedCode = injector(code);
-
 ```
 
-Injected Code Be Like: 
+### With Custom Timeout
+
+```javascript
+const {injector} = require('open-loop-killer');
+
+let code = `
+    for(let i = 0; i < 1000000; i++){
+        // Some operation
+    }
+`
+let injectedCode = injector(code, {
+    timeout: 5000  // 5 seconds
+});
 ```
-let _9ui = Date.now();
+
+### With Custom Error Message
+
+```javascript
+const {injector} = require('open-loop-killer');
+
+let code = `
+    while(true){
+    }
+`
+let injectedCode = injector(code, {
+    errorMessage: 'Loop execution timeout exceeded!'
+});
+```
+
+### With Both Options
+
+```javascript
+const {injector} = require('open-loop-killer');
+
+let injectedCode = injector(code, {
+    timeout: 2000,
+    errorMessage: 'Custom timeout message'
+});
+```
+
+### With For-In Loop
+
+```javascript
+const {injector} = require('open-loop-killer');
+
+let code = `
+    for(let key in largeObject) {
+        // Process each property
+    }
+`
+let injectedCode = injector(code, { timeout: 3000 });
+```
+
+### With For-Of Loop
+
+```javascript
+const {injector} = require('open-loop-killer');
+
+let code = `
+    for(let item of infiniteGenerator()) {
+        // Process each item
+    }
+`
+let injectedCode = injector(code);
+```
+
+### Injected Code Example
+
+Input:
+```javascript
+while(true) { }
+```
+
+Output:
+```javascript
+let _a3f9b2 = Date.now();
 while (true) {
-    if (Date.now() - _9ui > 1000) {
+    if (Date.now() - _a3f9b2 > 1000) {
         throw new Error('Open Loop Detected!');
     }
     {
     }
 }
-
 ```
+
+## Supported Loop Types
+
+✅ **Fully Protected:**
+- `while` loops
+- `for` loops
+- `do-while` loops
+- `for...in` loops
+- `for...of` loops
+
+## Limitations
+
+⚠️ **Important**: This package has the following limitations:
+
+1. **No protection for:**
+   - ❌ `for await...of` loops (async iteration - not yet supported)
+   - ❌ Recursive functions
+   - ❌ Async loops or promises without await
+   - ❌ Array methods like `.forEach()`, `.map()`, etc.
+
+2. **Timeout behavior:**
+   - Timeout is checked on each iteration
+   - If a single iteration takes longer than the timeout, it won't be caught
+   - Protection works best for loops with many fast iterations
+   - For `for...in` and `for...of`, protection works on iteration count, not property/item count
+
+3. **Error handling:**
+   - When a loop times out, it throws an error
+   - Make sure to wrap execution in try-catch if needed
+
+## Use Cases
+
+✅ **Good for:**
+- Online code editors
+- Educational platforms
+- Code sandboxes
+- Running untrusted user code
+- Development environments
+
+⚠️ **Consider alternatives for:**
+- Production applications requiring async iteration protection (`for await...of`)
+- Code with complex async patterns
+- Applications needing recursive function protection
+- High-performance applications (adds overhead to each loop iteration)
 
 
 
