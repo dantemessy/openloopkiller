@@ -54,6 +54,22 @@ Injects loop protection code into JavaScript source code.
 - Error if code is invalid JavaScript
 - Error if options are invalid
 
+## TypeScript Support
+
+This package includes TypeScript type definitions out of the box. No need to install separate `@types` packages!
+
+```typescript
+import { injector, InjectorOptions } from 'open-loop-killer';
+
+const code = 'while(true) { console.log("test"); }';
+const options: InjectorOptions = {
+  timeout: 2000,
+  errorMessage: 'Loop timeout!'
+};
+
+const protectedCode: string = injector(code, options);
+```
+
 ## Examples
 
 ### Basic Usage
