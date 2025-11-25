@@ -1,76 +1,217 @@
 /**
  * Runtime test to verify TypeScript definitions work correctly in practice
- * This file can be run with: node test/types.runtime.test.js
+ * Tests that the actual runtime behavior matches the TypeScript type definitions
  */
 
+'use strict';
+
+const { expect } = require('chai');
 const { injector } = require('../index.js');
 
-console.log('Running TypeScript definitions runtime verification tests...\n');
+describe('TypeScript Definitions - Runtime Verification', function() {
 
-// Test 1: Basic functionality
-console.log('Test 1: Basic usage without options');
-const code1 = 'while(true) { console.log("test"); }';
-const result1 = injector(code1);
-console.log('✓ Returned a string:', typeof result1 === 'string');
-console.log('✓ Contains loop protection:', result1.includes('Date.now()'));
+    describe('Basic Functionality', function() {
+        it('should work without options parameter', function() {
+            const code = 'while(true) { console.log("test"); }';
+            const result = injector(code);
+            
+            expect(result).to.be.a('string');
+            expect(result).to.include('Date.now()');
+        });
 
-// Test 2: With timeout option
-console.log('\nTest 2: Usage with timeout option');
-const code2 = 'for(let i = 0; i < 10; i++) { console.log(i); }';
-const result2 = injector(code2, { timeout: 2000 });
-console.log('✓ Returned a string:', typeof result2 === 'string');
-console.log('✓ Contains custom timeout:', result2.includes('2000'));
+        it('should return string type as declared in TypeScript definitions', function() {
+            const code = 'for(let i = 0; i < 10; i++) { }';
+            const result = injector(code);
+            
+            expect(result).to.be.a('string');
+        });
+    });
 
-// Test 3: With errorMessage option
-console.log('\nTest 3: Usage with errorMessage option');
-const code3 = 'do { console.log("test"); } while(true);';
-const result3 = injector(code3, { errorMessage: 'Loop timeout!' });
-console.log('✓ Returned a string:', typeof result3 === 'string');
-console.log('✓ Contains custom error message:', result3.includes('Loop timeout!'));
+    describe('InjectorOptions Interface', function() {
+        describe('timeout option', function() {
+            it('should accept numeric timeout value', function() {
+                const code = 'for(let i = 0; i < 10; i++) { console.log(i); }';
+                const result = injector(code, { timeout: 2000 });
+                
+                expect(result).to.be.a('string');
+                expect(result).to.include('2000');
+            });
 
-// Test 4: With both options
-console.log('\nTest 4: Usage with both options');
-const code4 = 'for(const key in obj) { console.log(key); }';
-const result4 = injector(code4, { 
-  timeout: 5000, 
-  errorMessage: 'Custom error message' 
+            it('should throw error for invalid timeout (negative number)', function() {
+                const code = 'while(true) {}';
+                
+                expect(() => {
+                    injector(code, { timeout: -1 });
+                }).to.throw();
+            });
+
+            it('should throw error for invalid timeout (string instead of number)', function() {
+                const code = 'while(true) {}';
+                
+                expect(() => {
+                    // @ts-expect-error - Testing runtime validation for invalid type
+                    injector(code, { timeout: '1000' });
+                }).to.throw();
+            });
+        });
+
+        describe('errorMessage option', function() {
+            it('should accept string errorMessage value', function() {
+                const code = 'do { console.log("test"); } while(true);';
+                const result = injector(code, { errorMessage: 'Loop timeout!' });
+                
+                expect(result).to.be.a('string');
+                expect(result).to.include('Loop timeout!');
+            });
+
+            it('should throw error for invalid errorMessage (number instead of string)', function() {
+                const code = 'while(true) {}';
+                
+                expect(() => {
+                    // @ts-expect-error - Testing runtime validation for invalid type
+                    injector(code, { errorMessage: 123 });
+                }).to.throw();
+            });
+        });
+
+        describe('combined options', function() {
+            it('should accept both timeout and errorMessage options', function() {
+                const code = 'for(const key in obj) { console.log(key); }';
+                const result = injector(code, { 
+                    timeout: 5000, 
+                    errorMessage: 'Custom error message' 
+                });
+                
+                expect(result).to.be.a('string');
+                expect(result).to.include('5000');
+                expect(result).to.include('Custom error message');
+            });
+
+            it('should work with full InjectorOptions interface', function() {
+                const options = {
+                    timeout: 3000,
+                    errorMessage: 'Test message'
+                };
+                const result = injector('for(let i=0; i<10; i++) {}', options);
+                
+                expect(result).to.be.a('string');
+                expect(result).to.include('3000');
+                expect(result).to.include('Test message');
+            });
+        });
+
+        describe('optional options', function() {
+            it('should work with empty options object', function() {
+                const code = 'while(true) { break; }';
+                const result = injector(code, {});
+                
+                expect(result).to.be.a('string');
+                expect(result).to.include('Date.now()');
+            });
+
+            it('should work with only timeout specified', function() {
+                const code = 'for(;;) { break; }';
+                const result = injector(code, { timeout: 1500 });
+                
+                expect(result).to.be.a('string');
+                expect(result).to.include('1500');
+            });
+
+            it('should work with only errorMessage specified', function() {
+                const code = 'do { break; } while(true);';
+                const result = injector(code, { errorMessage: 'Error!' });
+                
+                expect(result).to.be.a('string');
+                expect(result).to.include('Error!');
+            });
+        });
+    });
+
+    describe('Error Handling', function() {
+        it('should throw error for invalid JavaScript syntax', function() {
+            expect(() => {
+                injector('while true { }');
+            }).to.throw();
+        });
+
+        it('should throw error as declared in JSDoc @throws annotation', function() {
+            expect(() => {
+                injector('this is not valid javascript');
+            }).to.throw(Error);
+        });
+    });
+
+    describe('Type Definitions Consistency', function() {
+        it('should match declared function signature: (code: string, options?: InjectorOptions) => string', function() {
+            // Test with string code parameter
+            const validCode = 'while(true) { break; }';
+            expect(() => injector(validCode)).to.not.throw();
+            
+            // Test with options parameter
+            expect(() => injector(validCode, { timeout: 2000 })).to.not.throw();
+            
+            // Test return type is string
+            const result = injector(validCode);
+            expect(result).to.be.a('string');
+        });
+
+        it('should handle all documented loop types from JSDoc', function() {
+            // While loops
+            expect(injector('while(true) { break; }')).to.be.a('string');
+            
+            // For loops
+            expect(injector('for(let i=0; i<10; i++) {}')).to.be.a('string');
+            
+            // Do-while loops
+            expect(injector('do { break; } while(true);')).to.be.a('string');
+            
+            // For-in loops
+            expect(injector('for(let k in {}) {}')).to.be.a('string');
+            
+            // For-of loops
+            expect(injector('for(let v of []) {}')).to.be.a('string');
+        });
+    });
+
+    describe('Default Values', function() {
+        it('should use default timeout of 1000ms when not specified', function() {
+            const code = 'while(true) { break; }';
+            const result = injector(code);
+            
+            expect(result).to.include('1000');
+        });
+
+        it('should use default errorMessage "Open Loop Detected!" when not specified', function() {
+            const code = 'for(;;) { break; }';
+            const result = injector(code);
+            
+            expect(result).to.include('Open Loop Detected!');
+        });
+    });
+
+    describe('TypeScript Import Scenarios', function() {
+        it('should support CommonJS require as shown in type definitions', function() {
+            const { injector: importedInjector } = require('../index.js');
+            
+            expect(importedInjector).to.be.a('function');
+            
+            const result = importedInjector('while(true) { break; }');
+            expect(result).to.be.a('string');
+        });
+
+        it('should support destructuring InjectorOptions interface pattern', function() {
+            // This tests that the options object structure works as documented
+            const options = {
+                timeout: 2500,
+                errorMessage: 'Timeout occurred'
+            };
+            
+            const code = 'for(let i=0; i<100; i++) {}';
+            const result = injector(code, options);
+            
+            expect(result).to.include('2500');
+            expect(result).to.include('Timeout occurred');
+        });
+    });
 });
-console.log('✓ Returned a string:', typeof result4 === 'string');
-console.log('✓ Contains custom timeout:', result4.includes('5000'));
-console.log('✓ Contains custom error message:', result4.includes('Custom error message'));
-
-// Test 5: Verify options type checking (for documentation)
-console.log('\nTest 5: Options object structure');
-const validOptions = {
-  timeout: 3000,
-  errorMessage: 'Test message'
-};
-const result5 = injector('for(let i=0; i<10; i++) {}', validOptions);
-console.log('✓ Works with full options object:', typeof result5 === 'string');
-
-// Test 6: Error handling
-console.log('\nTest 6: Error handling');
-try {
-  injector('while true { }'); // Invalid syntax
-  console.log('✗ Should have thrown an error for invalid syntax');
-} catch (error) {
-  console.log('✓ Correctly throws error for invalid syntax');
-}
-
-try {
-  injector('while(true) {}', { timeout: -1 }); // Invalid timeout
-  console.log('✗ Should have thrown an error for invalid timeout');
-} catch (error) {
-  console.log('✓ Correctly throws error for invalid timeout');
-}
-
-try {
-  injector('while(true) {}', { errorMessage: 123 }); // Invalid errorMessage
-  console.log('✗ Should have thrown an error for invalid errorMessage');
-} catch (error) {
-  console.log('✓ Correctly throws error for invalid errorMessage type');
-}
-
-console.log('\n✅ All runtime verification tests passed!');
-console.log('\nTypeScript definitions are working correctly and match runtime behavior.');
 
